@@ -24,8 +24,25 @@ def print_header
 end
 
 def print(students)
+  puts "Student Search (Type 'quit' to quit)"
+  while true
+    puts "Please input the first letter of the students'name you want to search for:"
+    firstLetter = gets.chomp.downcase
+    if firstLetter == "quit"
+      puts "quitting.."
+      exit
+    elsif firstLetter.length >1
+      puts "Please type in only one letter."
+      next
+    elsif firstLetter.length <=0
+      next
+    end
+    break
+  end
   students.each_with_index do |student, index|
-  puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    if student[:name][0].downcase==firstLetter
+      puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    end
   end
 end
 
