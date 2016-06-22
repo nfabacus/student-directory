@@ -8,9 +8,13 @@ def input_students
   name = gets.chomp
   # while the name is not empty, repeat this code
   while !name.empty? do
-    # add the student hash to the array
-    students << {name: name, cohort: :november}
-    puts "Now we have #{students.count} students"
+    if name.length < 12
+      # add the student hash to the array
+      students << {name: name, cohort: :november}
+      puts "Now we have #{students.count} students"
+    else
+      puts "Name has to be shorter than 12 characters. This name will not be added."
+    end
     # get another name from the user
     name = gets.chomp
   end
