@@ -43,10 +43,14 @@ def print(students)
     end
     break
   end
-  students.each_with_index do |student, index|
+
+  index = 0
+  until index > students.count-1
+    student = students[index]
     if student[:name][0].downcase==firstLetter
       puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
     end
+    index +=1
   end
 end
 
