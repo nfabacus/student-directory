@@ -8,7 +8,7 @@ def input_students ()
   while true
     puts "Please enter the names of the students"
     puts "To finish, just hit return twice"
-    name = gets.chomp
+    name = gets.gsub(/\n/,"") #Used gsub instead of chomp
 
     if name.empty?
       break
@@ -23,7 +23,7 @@ def input_students ()
     cohort = nil
     until !cohorts.select{|month| month == cohort}.empty?
       puts "Which cohort is the student in? (January to December)"
-      cohort = gets.chomp
+      cohort = gets.gsub(/\n/,"") #Used gsub instead of chomp
       cohort = "July" if cohort.empty?
       cohort = cohort.gsub(/\s+/,+"_").capitalize.to_sym
     end
