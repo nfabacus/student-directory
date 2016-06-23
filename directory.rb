@@ -59,6 +59,7 @@ def print_header
 end
 
 def print(students)
+  selectedStudents = []
   puts "Student Search (Type 'quit' to quit)".center(120)
   while true
     puts "Please input the first letter of the students'name you want to search for:".center(120)
@@ -79,13 +80,28 @@ def print(students)
   until index > students.count-1
     student = students[index]
     if student[:name][0].downcase==firstLetter
-      puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)".center(120)
-      puts "Hobbies: #{student[:hobbies].join(', ')}.".center(120)
-      puts "Country of birth: #{student[:country_of_birth]}".center(120)
-      puts " Height: #{student[:height]} Weight: #{student[:weight]}".center(120)
+      selectedStudents.push(student)
+
     end
     puts
     index +=1
+  end
+
+  cohorts = [:January, :February, :March,
+              :April, :May, :June,
+              :July, :August, :September,
+              :October, :November, :December]
+
+  for i in 0..cohorts.length-1
+    selectedStudents.map do |student|
+      if student[:cohort]==cohorts[i]
+        puts "#{student[:name]} (#{student[:cohort]} cohort)".center(120)
+        puts "Hobbies: #{student[:hobbies].join(', ')}.".center(120)
+        puts "Country of birth: #{student[:country_of_birth]}".center(120)
+        puts " Height: #{student[:height]} Weight: #{student[:weight]}".center(120)
+        puts
+      end
+    end
   end
 end
 
