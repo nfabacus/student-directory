@@ -59,6 +59,11 @@ def print_header
 end
 
 def print(students)
+  if students.count == 0
+    puts "No list to print. Good bye!"
+    exit
+  end
+  
   selectedStudents = []
   puts "Student Search (Type 'quit' to quit)".center(120)
   while true
