@@ -32,7 +32,7 @@ def input_students
     3.times do |x|
       puts "What is the student's hobby(#{x+1})?"
       hobby = gets.chomp
-      hobbies << hobby unless hobby.empty?
+      hobbies << hobby
     end
 
     puts "Where is the student's country of birth?"
@@ -116,6 +116,7 @@ def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
   puts "9. Exit" # 9 because we'll be adding more items.
 end
 
@@ -133,6 +134,8 @@ def process(selection)
     show_students
   when "3"
     save_students
+  when "4"
+    load_students
   when "9"
     exit # this will cause the program to terminate
   else
@@ -148,6 +151,15 @@ def save_students
     student_data = [student[:name], student[:cohort], student[:hobbies], student[:country_of_birth], student[:height], student[:weight]]
     csv_line = student_data.join(',')
     file.puts csv_line
+  end
+  file.close
+end
+
+def load_students
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+    name, cohort, hobby1, hobby2, hobby3, country_of_birth, height, weight = line.chomp.split(',')
+    @students << {name: name, cohort: cohort.to_sym, hobbies:[hobby1, hobby2, hobby3], country_of_birth: country_of_birth, height: height, weight: weight}
   end
   file.close
 end
