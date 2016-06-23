@@ -1,10 +1,10 @@
 @students = []
+@cohorts = [:January, :February, :March,
+            :April, :May, :June,
+            :July, :August, :September,
+            :October, :November, :December]
 
 def input_students
-  cohorts = [:January, :February, :March,
-              :April, :May, :June,
-              :July, :August, :September,
-              :October, :November, :December]
   while true
     puts "Please enter the names of the students"
     puts "To finish, just hit return twice"
@@ -21,7 +21,7 @@ def input_students
     end
 
     cohort = nil
-    until !cohorts.select{|month| month == cohort}.empty?
+    until !@cohorts.select{|month| month == cohort}.empty?
       puts "Which cohort is the student in? (January to December)"
       cohort = gets.gsub(/\n/,"") #Used gsub instead of chomp
       cohort = "July" if cohort.empty?
@@ -90,14 +90,9 @@ def print_students_list
     index +=1
   end
 
-  cohorts = [:January, :February, :March,
-              :April, :May, :June,
-              :July, :August, :September,
-              :October, :November, :December]
-
-  for i in 0..cohorts.length-1
+  for i in 0..@cohorts.length-1
     selectedStudents.map do |student|
-      if student[:cohort]==cohorts[i]
+      if student[:cohort]==@cohorts[i]
         puts "#{student[:name]} (#{student[:cohort]} cohort)".center(120)
         puts "Hobbies: #{student[:hobbies].join(', ')}.".center(120)
         puts "Country of birth: #{student[:country_of_birth]}".center(120)
@@ -120,6 +115,7 @@ def print_menu
   # 1. print the menu and ask the user what to do.
   puts "1. Input the students"
   puts "2. Show the students"
+  puts "3. Save the list to students.csv"
   puts "9. Exit" # 9 because we'll be adding more items.
 end
 
@@ -135,11 +131,25 @@ def process(selection)
     input_students
   when "2"
     show_students
+  when "3"
+    save_students
   when "9"
     exit # this will cause the program to terminate
   else
     puts "I don't know what you meant, try again."
   end
+end
+
+def save_students
+  #open the file for writing
+  file = File.open("students.csv", "w")
+  #iterate over the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort], student[:hobbies], student[:country_of_birth], student[:height], student[:weight]]
+    csv_line = student_data.join(',')
+    file.puts csv_line
+  end
+  file.close
 end
 
 def interactive_menu
