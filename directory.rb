@@ -8,7 +8,7 @@ def input_students
   while true
     puts "Please enter the names of the students"
     puts "To finish, just hit return twice"
-    name = gets.gsub(/\n/,"") #Used gsub instead of chomp
+    name = STDIN.gets.gsub(/\n/,"") #Used gsub instead of chomp
 
     if name.empty?
       break
@@ -23,7 +23,7 @@ def input_students
     cohort = nil
     until !@cohorts.select{|month| month == cohort}.empty?
       puts "Which cohort is the student in? (January to December)"
-      cohort = gets.gsub(/\n/,"") #Used gsub instead of chomp
+      cohort = STDIN.gets.gsub(/\n/,"") #Used gsub instead of chomp
       cohort = "July" if cohort.empty?
       cohort = cohort.gsub(/\s+/,+"_").capitalize.to_sym
     end
@@ -31,18 +31,18 @@ def input_students
     hobbies = []
     3.times do |x|
       puts "What is the student's hobby(#{x+1})?"
-      hobby = gets.chomp
+      hobby = STDIN.gets.chomp
       hobbies << hobby
     end
 
     puts "Where is the student's country of birth?"
-    cOBirth = gets.chomp
+    cOBirth = STDIN.gets.chomp
 
     puts "What is the height of the student?"
-    height = gets.chomp
+    height = STDIN.gets.chomp
 
     puts "What is the weight of the student?"
-    weight = gets.chomp
+    weight = STDIN.gets.chomp
 
     # add the student hash to the array
     @students << {name: name, cohort: cohort, hobbies: hobbies, country_of_birth: cOBirth, height: height, weight: weight  }
@@ -66,23 +66,22 @@ def print_students_list
   puts "Student Search (Type 'quit' to quit)".center(120)
   while true
     puts "Please input the first letter of the students'name you want to search for:".center(120)
-    firstLetter = gets.chomp.downcase
+    firstLetter = STDIN.gets.chomp.downcase
     if firstLetter == "quit"
       puts "quitting.."
       exit
     elsif firstLetter.length >1
       puts "Please type in only one letter."
       next
-    elsif firstLetter.length <=0
-      next
     end
     break
+
   end
 
   index = 0
   until index > @students.count-1
     student = @students[index]
-    if student[:name][0].downcase==firstLetter
+    if student[:name][0].downcase==firstLetter || firstLetter.empty?
       selectedStudents.push(student)
 
     end
@@ -155,8 +154,9 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename= "students.csv")
+  @students=[]
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort, hobby1, hobby2, hobby3, country_of_birth, height, weight = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym, hobbies:[hobby1, hobby2, hobby3], country_of_birth: country_of_birth, height: height, weight: weight}
@@ -164,11 +164,23 @@ def load_students
   file.close
 end
 
-def interactive_menu
-  loop do
-    print_menu
-    process(gets.chomp)
+def try_load_students
+  filename = ARGV.first # first argument from the command line
+  return if filename.nil? # get out of the method if it isn't given
+  if File.exists?(filename) #if it exists
+    load_students(filename)
+  else #if it does not exist
+    puts "Sorry, #{filename} doesn't exisit."
+    exit #quit the program
   end
 end
 
+def interactive_menu
+  loop do
+    print_menu
+    process(STDIN.gets.chomp)
+  end
+end
+
+try_load_students
 interactive_menu
