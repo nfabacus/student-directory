@@ -8,6 +8,18 @@ def add_student_to_array (name, cohort, hobbies, country_of_birth, height, weigh
   @students << {name: name, cohort: cohort.to_sym, hobbies:hobbies, country_of_birth: country_of_birth, height: height, weight: weight}
 end
 
+def save_students (filename="students.csv")
+  #open the file for writing
+  file = File.open(filename, "w")
+  #iterate over the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort], student[:hobbies], student[:country_of_birth], student[:height], student[:weight]]
+    csv_line = student_data.join(',')
+    file.puts csv_line
+  end
+  file.close
+end
+
 def load_students(filename= "students.csv")
   @students=[]
   file = File.open(filename, "r")
@@ -137,8 +149,8 @@ def print_menu
   # 1. print the menu and ask the user what to do.
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to a csv file."
+  puts "4. Load the list from a csv file."
   puts "9. Exit" # 9 because we'll be adding more items.
 end
 
@@ -154,33 +166,50 @@ def process(selection)
     input_students
   when "2"
     show_students
-    puts "Displayed the student list successfully..back to the main menu."
+    puts "Displayed the student list successfully..back to the main menu.".center(120)
+    puts
   when "3"
-    save_students
-    puts "Saved students successfully..back to the main menu."
+
+    save_students(ask_filename "save")
+    puts "Saved students successfully..back to the main menu.".center(120)
+    puts
   when "4"
-    load_students
-    puts "Loaded students successfully..back to the main menu."
+    load_students(ask_filename "load")
+    puts "Loaded students successfully..back to the main menu.".center(120)
+    puts
   when "9"
-    puts "Exiting the program..."
+    puts "Exiting the program...".center(120)
+    puts
     exit # this will cause the program to terminate
   else
-    puts "I don't know what you meant, try again."
+    puts "I don't know what you meant, try again.".center(120)
   end
 end
 
-def save_students
-  #open the file for writing
-  file = File.open("students.csv", "w")
-  #iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:hobbies], student[:country_of_birth], student[:height], student[:weight]]
-    csv_line = student_data.join(',')
-    file.puts csv_line
-  end
-  file.close
-end
+def ask_filename param
+  loop do
+    puts "Please type in the CSV file name (e.g. students.csv) Type q to quit."
+    filename = gets.chomp
+    if filename == "q"
+      puts "Exiting the program..."
+      puts
+      exit
+    end
+    next if filename.empty?
 
+    if param =="save"
+      return filename
+    end
+
+    if param == "load"
+      if File.exists?(filename)
+        return filename
+      else
+        puts "Sorry, #{filename} doesn't exist."
+      end
+    end
+  end
+end
 
 def try_load_students
   filename = ARGV.first # first argument from the command line
@@ -190,7 +219,7 @@ def try_load_students
   if File.exists?(filename) #if it exists
     load_students(filename)
   else #if it does not exist
-    puts "Sorry, #{filename} doesn't exisit."
+    puts "Sorry, #{filename} doesn't exist."
     exit #quit the program
   end
 end
