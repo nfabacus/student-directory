@@ -4,6 +4,10 @@
             :July, :August, :September,
             :October, :November, :December]
 
+def add_student_to_array (name, cohort, hobbies, country_of_birth, height, weight)
+  @students << {name: name, cohort: cohort.to_sym, hobbies:hobbies, country_of_birth: country_of_birth, height: height, weight: weight}
+end
+
 def load_students(filename= "students.csv")
   @students=[]
   file = File.open(filename, "r")
@@ -13,12 +17,13 @@ def load_students(filename= "students.csv")
     hobbies << hobby1
     hobbies << hobby2
     hobbies << hobby3
-    @students << {name: name, cohort: cohort.to_sym, hobbies:hobbies, country_of_birth: country_of_birth, height: height, weight: weight}
+    add_student_to_array name, cohort, hobbies, country_of_birth, height, weight
   end
   file.close
 end
 
 def input_students
+  studentsAdded = 0
   while true
     puts "Please enter the names of the students"
     puts "To finish, just hit return twice"
@@ -59,10 +64,14 @@ def input_students
     weight = STDIN.gets.chomp
 
     # add the student hash to the array
-    @students << {name: name, cohort: cohort.to_sym, hobbies:hobbies, country_of_birth: country_of_birth, height: height, weight: weight}
-    puts "Now we have #{@students.count} students"
-    puts
+    add_student_to_array name, cohort, hobbies, country_of_birth, height, weight
+    studentsAdded +=1
   end
+
+  puts "#{studentsAdded} student(s) added."
+  puts "Now we have #{@students.count} students"
+  puts "Exiting to the main menu.."
+
 end
 
 def print_header
@@ -145,11 +154,15 @@ def process(selection)
     input_students
   when "2"
     show_students
+    puts "Displayed the student list successfully..back to the main menu."
   when "3"
     save_students
+    puts "Saved students successfully..back to the main menu."
   when "4"
     load_students
+    puts "Loaded students successfully..back to the main menu."
   when "9"
+    puts "Exiting the program..."
     exit # this will cause the program to terminate
   else
     puts "I don't know what you meant, try again."
