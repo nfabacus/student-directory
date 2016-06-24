@@ -4,6 +4,20 @@
             :July, :August, :September,
             :October, :November, :December]
 
+def load_students(filename= "students.csv")
+  @students=[]
+  file = File.open(filename, "r")
+  file.readlines.each do |line|
+    name, cohort, hobby1, hobby2, hobby3, country_of_birth, height, weight = line.chomp.split(',')
+    hobbies =[]
+    hobbies << hobby1
+    hobbies << hobby2
+    hobbies << hobby3
+    @students << {name: name, cohort: cohort.to_sym, hobbies:hobbies, country_of_birth: country_of_birth, height: height, weight: weight}
+  end
+  file.close
+end
+
 def input_students
   while true
     puts "Please enter the names of the students"
@@ -36,7 +50,7 @@ def input_students
     end
 
     puts "Where is the student's country of birth?"
-    cOBirth = STDIN.gets.chomp
+    country_of_birth = STDIN.gets.chomp
 
     puts "What is the height of the student?"
     height = STDIN.gets.chomp
@@ -45,7 +59,7 @@ def input_students
     weight = STDIN.gets.chomp
 
     # add the student hash to the array
-    @students << {name: name, cohort: cohort, hobbies: hobbies, country_of_birth: cOBirth, height: height, weight: weight  }
+    @students << {name: name, cohort: cohort.to_sym, hobbies:hobbies, country_of_birth: country_of_birth, height: height, weight: weight}
     puts "Now we have #{@students.count} students"
     puts
   end
@@ -154,19 +168,12 @@ def save_students
   file.close
 end
 
-def load_students(filename= "students.csv")
-  @students=[]
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort, hobby1, hobby2, hobby3, country_of_birth, height, weight = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym, hobbies:[hobby1, hobby2, hobby3], country_of_birth: country_of_birth, height: height, weight: weight}
-  end
-  file.close
-end
 
 def try_load_students
   filename = ARGV.first # first argument from the command line
-  return if filename.nil? # get out of the method if it isn't given
+  if filename.nil?
+    filename = "students.csv"
+  end
   if File.exists?(filename) #if it exists
     load_students(filename)
   else #if it does not exist
