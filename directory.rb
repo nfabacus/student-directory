@@ -10,28 +10,28 @@ end
 
 def save_students (filename="students.csv")
   #open the file for writing
-  file = File.open(filename, "w")
-  #iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:hobbies], student[:country_of_birth], student[:height], student[:weight]]
-    csv_line = student_data.join(',')
-    file.puts csv_line
+  File.open filename, 'w' do |file|
+    #iterate over the array of students
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort], student[:hobbies], student[:country_of_birth], student[:height], student[:weight]]
+      csv_line = student_data.join(',')
+      file.puts csv_line
+    end
   end
-  file.close
 end
 
 def load_students(filename= "students.csv")
   @students=[]
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort, hobby1, hobby2, hobby3, country_of_birth, height, weight = line.chomp.split(',')
-    hobbies =[]
-    hobbies << hobby1
-    hobbies << hobby2
-    hobbies << hobby3
-    add_student_to_array name, cohort, hobbies, country_of_birth, height, weight
+  File.open filename, 'r' do |file|
+    file.readlines.each do |line|
+      name, cohort, hobby1, hobby2, hobby3, country_of_birth, height, weight = line.chomp.split(',')
+      hobbies =[]
+      hobbies << hobby1
+      hobbies << hobby2
+      hobbies << hobby3
+      add_student_to_array name, cohort, hobbies, country_of_birth, height, weight
+    end
   end
-  file.close
 end
 
 def input_students
