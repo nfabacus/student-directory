@@ -149,8 +149,8 @@ def print_menu
   # 1. print the menu and ask the user what to do.
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to a csv file."
-  puts "4. Load the list from a csv file."
+  puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
   puts "9. Exit" # 9 because we'll be adding more items.
 end
 
@@ -169,12 +169,13 @@ def process(selection)
     puts "Displayed the student list successfully..back to the main menu.".center(120)
     puts
   when "3"
-
-    save_students(ask_filename "save")
+    filename = ask_filename "save"
+    save_students(filename)
     puts "Saved students successfully..back to the main menu.".center(120)
     puts
   when "4"
-    load_students(ask_filename "load")
+    filename = ask_filename "load"
+    load_students(filename)
     puts "Loaded students successfully..back to the main menu.".center(120)
     puts
   when "9"
@@ -189,7 +190,7 @@ end
 def ask_filename param
   loop do
     puts "Please type in the CSV file name (e.g. students.csv) Type q to quit."
-    filename = gets.chomp
+    filename = STDIN.gets.chomp
     if filename == "q"
       puts "Exiting the program..."
       puts
@@ -198,7 +199,7 @@ def ask_filename param
     next if filename.empty?
 
     if param =="save"
-      return filename
+        return filename
     end
 
     if param == "load"
