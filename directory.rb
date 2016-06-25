@@ -40,9 +40,7 @@ def input_students
     puts "To finish, just hit return twice"
     name = STDIN.gets.gsub(/\n/,"") #Used gsub instead of chomp
 
-    if name.empty?
-      break
-    end
+    break if name.empty?
 
     if name.length >= 12
       puts "Name has to be shorter than 12 characters. This name will not be added."
@@ -117,7 +115,6 @@ def print_students_list
     student = @students[index]
     if student[:name][0].downcase==firstLetter || firstLetter.empty?
       selectedStudents.push(student)
-
     end
     puts
     index +=1
@@ -137,11 +134,7 @@ def print_students_list
 end
 
 def print_footer()
-  if @students.count ==1
-    puts "Now we have #{@students.count} great student.".center(120)
-  else
-    puts "Overall, we have #{@students.count} great students.".center(120)
-  end
+  @students.count == 1 ? (puts "Now we have #{@students.count} great student.".center(120)) : (puts "Overall, we have #{@students.count} great students.".center(120))
 end
 
 def print_menu
@@ -197,11 +190,10 @@ def ask_filename param
     end
     next if filename.empty?
 
-    if param =="save"
-        return filename
-    end
-
-    if param == "load"
+    case param
+    when "save"
+      return filename
+    when "load"
       if File.exists?(filename)
         return filename
       else
@@ -213,9 +205,8 @@ end
 
 def try_load_students
   filename = ARGV.first # first argument from the command line
-  if filename.nil?
-    filename = "students.csv"
-  end
+  filename = "students.csv" if filename.nil?
+
   if File.exists?(filename) #if it exists
     load_students(filename)
   else #if it does not exist
